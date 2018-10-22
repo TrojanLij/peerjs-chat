@@ -1,6 +1,6 @@
 body{
-    background-color: rgba(253, 80, 187, 0.5) ;
-    background-image: url(./src/img/logo.png);
+    background-color: rgba(255, 255, 255, 0.63) ;
+    background-image: url(./src/img/logo.svg);
     background-repeat: no-repeat;
     background-position-x: center;
     background-position-y: 200px;
@@ -43,7 +43,7 @@ body{
     padding: 5px;
     cursor: move;
     z-index: 10;
-    background-color: rgb(255, 6, 193);
+    background-color: rgba(255, 30, 30, 0.863);
     color: #fff;
 }
 
@@ -110,7 +110,7 @@ button {
     height: auto;
     width: fit-content;
     text-align: center;
-    background-color: rgba(253, 80, 187, 0.5);
+    background-color: rgba(252, 100, 95, 0.5);
     border: 0px;
     border-radius: 20px;
 }
@@ -121,7 +121,7 @@ button {
     height: auto;
     width: fit-content;
     text-align: center;
-    background-color: rgba(253, 80, 187, 0.5);
+    background-color: rgba(252, 100, 95, 0.5);
     border: 0px;
     border-radius: 20px;
 }
