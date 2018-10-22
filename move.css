@@ -1,0 +1,154 @@
+body{
+    background-color: rgba(253, 80, 187, 0.5) ;
+    background-image: url(./src/img/logo.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: 200px;
+}
+
+*:focus {
+    outline: none;
+}
+
+#get_div {
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: center; 
+    padding-bottom: 20px;
+}
+
+#send_div{
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: center;
+    width: auto;
+}
+
+#message{
+    text-align: left; 
+    width: auto; 
+    height: 100%;
+}
+
+#mydiv {
+    position: absolute;
+    top:0;
+    z-index: 9;
+    background-color: #f1f1f1;
+    text-align: center;
+    border: 1px solid #d3d3d3;
+}
+
+#mydivheader {
+    padding: 5px;
+    cursor: move;
+    z-index: 10;
+    background-color: rgb(255, 6, 193);
+    color: #fff;
+}
+
+#resize_div {
+    resize: both;
+    overflow: auto;
+    padding: 5px;
+    height: auto;
+    width: auto;
+}
+
+.selfMsg {
+    color: green;
+}
+
+.peerMsg {
+    color: red;
+}
+
+button {
+    background-color: rgba(255, 255, 255, 0);
+    border: 0px;
+    margin: 10px;
+}
+
+#sendButton{
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 20%;
+    border: 1px solid red;
+    margin: 10px;
+    padding: 5px;
+}
+
+#sendButton img {
+    margin: 0%;
+    padding: 0%;
+    width: 30px;
+    height: auto;
+}
+
+#clearMsgsButton{
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 100px;
+    border: 1px solid red;
+    padding: 10px;
+    margin: 10px;
+}
+
+#receiver-id{
+    margin-right: 0%;
+    margin-left: 5px;
+}
+
+.center {
+    margin: 0 auto;
+    left: 0;
+    top: 50%;
+    text-align: center;
+}
+
+#sendMessageBox{
+    size: 20px;
+    padding: 10px;
+    height: auto;
+    width: fit-content;
+    text-align: center;
+    background-color: rgba(253, 80, 187, 0.5);
+    border: 0px;
+    border-radius: 20px;
+}
+
+#receiver-id{
+    size: 20px;
+    padding: 10px;
+    height: auto;
+    width: fit-content;
+    text-align: center;
+    background-color: rgba(253, 80, 187, 0.5);
+    border: 0px;
+    border-radius: 20px;
+}
+
+#connect-button img{
+    margin: 0%;
+    padding: 0%;
+    width: 30px;
+    height: auto;
+}
+
+#clearMsgsButton img {
+    margin: 0%;
+    padding: 0%;
+    width: 20px;
+    height: auto;
+}
+
+#fullscreen{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#fullscreen img {
+    margin: 0%;
+    padding: 0%;
+    width: 20px;
+    height: auto;
+}

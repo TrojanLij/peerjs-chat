@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="move.css">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+        <title>Peer-to-Peer Cue System --- Reciever</title>
+    </head>
+    <body>
+
+        <div>
+            <div id="send_div">
+                <p>Status:</p>
+                <div id="receiverid" title="Copy this ID to the input on send.html.">ID:</div>
+                <input type="text" id="receiver-id" title="Input the ID from receive.html"><br>
+                <button id="connect-button"><img src="./src/img/connect_ico.png"/></button>
+                <div id="status" class="status" style="margin: 0%; padding: 0%;"></div>
+            </div>
+        </div>
+        <div id="mydiv" class="center">
+            <div id="mydivheader">
+                <p>Message:</p>
+                <button id="fullscreen" onclick="fullscreen_set()"><img src="./src/img/fullscreenizer_ico.png"></button>
+            </div>
+            <div id="resize_div">
+                <div id="get_div">
+                    <input type="text" id="sendMessageBox" placeholder="Enter a message..." autofocus="true" />
+                    <button type="button" id="sendButton"><img src="./src/img/send_ico.png"/></button>
+                    <button type="button" id="clearMsgsButton"><img src="./src/img/eraser_ico.png"/></button>
+                    <div class="message" id="message"></div>
+                </div>
+            </div>
+        </div>
+        <script>
+                var toggle = 1;
+                function fullscreen_set() {
+                    if(toggle == 1)
+                    {
+                        document.getElementById("mydiv").setAttribute("style", "width:100%;height:90%;");
+                        document.getElementById("get_div").setAttribute("style", "width:auto;height:auto;");
+                        document.getElementById("message").setAttribute("style", "width:auto;height:100%;");
+                        document.getElementById("resize_div").setAttribute("style", "width:auto;height:92%;");
+                        toggle = 0;
+                    }
+                    else {
+                        document.getElementById("mydiv").setAttribute("style", "width:30%;height:auto;");
+                        document.getElementById("mydiv").setAttribute("style", "width:auto;height:auto;");
+                        document.getElementById("get_div").setAttribute("style", "width:auto;height:auto;");
+                        document.getElementById("message").setAttribute("style", "width:auto;height:auto;");
+                        document.getElementById("resize_div").setAttribute("style", "width:auto;height:auto;");
+                        toggle = 1;
+                    }
+                }
+        </script>
+        <script>
+                //Make the DIV element draggagle:
+                dragElement(document.getElementById("mydiv"));
+                
+                function dragElement(elmnt) {
+                    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                    if (document.getElementById(elmnt.id + "header")) {
+                    /* if present, the header is where you move the DIV from:*/
+                    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+                    } else {
+                    /* otherwise, move the DIV from anywhere inside the DIV:*/
+                    elmnt.onmousedown = dragMouseDown;
+                    }
+                
+                    function dragMouseDown(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    // get the mouse cursor position at startup:
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    document.onmouseup = closeDragElement;
+                    // call a function whenever the cursor moves:
+                    document.onmousemove = elementDrag;
+                    }
+                
+                    function elementDrag(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    // calculate the new cursor position:
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    // set the element's new position:
+                    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                    }
+                
+                    function closeDragElement() {
+                    /* stop moving when mouse button is released:*/
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                    }
+                }
+        </script>
+        <script src="peer.js"></script>
+        <script type="text/javascript">
+            (function () {
+
+                var peer = null; // Own peer object
+                var peerId = null;
+                var conn = null;
+                var oppositePeer = { // Opposite peer object
+                    peerId: null
+                };
+                var msg = null;
+                var recvId = document.getElementById("receiverid");
+                var status = document.getElementById("status");
+                var message = document.getElementById("message");
+                var sendMessageBox = document.getElementById("sendMessageBox");
+                var sendButton = document.getElementById("sendButton");
+                var clearMsgsButton = document.getElementById("clearMsgsButton");
+
+                function ready() {
+                    conn.on('data', function (data) {
+                        console.log("Data recieved");
+                        var cueString = "<span class=\"cueMsg\">Cue: </span>";
+                        switch (data) {
+                            default:
+                                addMessage("<span class=\"peerMsg\">Peer: </span>" + data);
+                                break;
+                        };
+                    });
+                    conn.on('close', function () {
+                        status.innerHTML = "Connection reset<br>Awaiting connection...";
+                        conn = null;
+                        start(true);
+                    });
+                    peer.on('disconnected', function () {
+                        alert("Connection has been lost.");
+                        peer.reconnect();
+                    });
+                    peer.on('error', function (err) {
+                        alert('' + err)
+                    });
+
+                    // Listen for enter
+                    sendMessageBox.onkeypress = function (e) {
+                        var event = e || window.event;
+                        var char = event.which || event.keyCode;
+                        if (char == '13')
+                            sendButton.click();
+                    };
+                    // Send message
+                    sendButton.onclick = function () {
+                        msg = sendMessageBox.value;
+                        sendMessageBox.value = "";
+                        conn.send(msg);
+                        console.log("Sent: " + msg)
+                        addMessage("<span class=\"selfMsg\">Me: </span>" + msg);
+                    };
+                    // Clear messages box
+                    clearMsgsButton.onclick = function () {
+                        clearMessages();
+                    };
+                }
+
+                function initialize() {
+                    
+                    // Create own peer object with connection to shared PeerJS server
+                    peer = new Peer(null, {
+                        debug: 2
+                    });
+
+                    peer.on('open', function (id) {
+                        peerId = id;
+                        console.log('ID: ' + id);
+                    });
+                    peer.on('error', function (err) {
+                        if (err.type === 'unavailable-id') {
+                            alert('' + err);
+                            peer.reconnect();
+                        }
+                        else
+                            alert('' + err);
+                    });
+                };
+
+                function start(noInitialize) {
+                    if (noInitialize)
+                        reset();
+                    else
+                        initialize();
+
+                    peer.on('open', function () {
+                        recvId.innerHTML = "ID: " + peer.id;
+                        status.innerHTML = "Awaiting connection...";
+                    });
+                    peer.on('connection', function (c) {
+                        if (conn) {
+                            c.send("Already connected...");
+                            c.close();
+                            return
+                        }
+                        conn = c;
+                        console.log("Connected.");
+                        status.innerHTML = "Connected";
+                        ready()
+                    });
+                }
+
+                function addMessage(msg) {
+                    var now = new Date();
+                    var h = now.getHours();
+                    var m = addZero(now.getMinutes());
+                    var s = addZero(now.getSeconds());
+
+                    if (h > 12)
+                        h -= 12;
+                    else if (h === 0)
+                        h = 12;
+
+                    function addZero(t) {
+                        if (t < 10)
+                            t = "0" + t;
+                        return t;
+                    };
+
+                    message.innerHTML = "<br><span class=\"msg-time\">" + h + ":" + m + ":" + s + "</span>  -  " + msg + message.innerHTML;
+                }
+
+                function clearMessages() {
+                    message.innerHTML = "";
+                    addMessage("Msgs cleared");
+                }
+
+                if (conn) {
+                    ready()
+                }
+                else {
+                    start()
+                }
+            })();
+        </script>
+    </body>
+</html>
