@@ -10,11 +10,10 @@
 
         <div>
             <div id="send_div">
-                <p>Status:</p>
                 <div id="receiverid" title="Copy this ID to the input on send.html.">ID:</div>
                 <input type="text" id="receiver-id" title="Input the ID from receive.html"><br>
                 <button id="connect-button"><img src="./src/img/connect_ico.png"/></button>
-                <div id="status" class="status" style="margin: 0%; padding: 0%;"></div>
+                
             </div>
         </div>
         <div id="mydiv" class="center">
@@ -26,7 +25,8 @@
                 <div id="get_div">
                     <input type="text" id="sendMessageBox" placeholder="Enter a message..." autofocus="true" />
                     <button type="button" id="sendButton"><img src="./src/img/send_ico.png"/></button>
-                    <button type="button" id="clearMsgsButton"><img src="./src/img/eraser_ico.png"/></button>
+                    <button type="button" id="clearMsgsButton"><img src="./src/img/eraser_ico.png"/></button><br>
+                    <div id="status" class="status" style="margin: 0%; padding: 0%;"></div>
                     <div class="message" id="message"></div>
                 </div>
             </div>
@@ -118,7 +118,6 @@
                 function ready() {
                     conn.on('data', function (data) {
                         console.log("Data recieved");
-                        var cueString = "<span class=\"cueMsg\">Cue: </span>";
                         switch (data) {
                             default:
                                 addMessage("<span class=\"peerMsg\">Peer: </span>" + data);
@@ -148,10 +147,17 @@
                     // Send message
                     sendButton.onclick = function () {
                         msg = sendMessageBox.value;
-                        sendMessageBox.value = "";
-                        conn.send(msg);
-                        console.log("Sent: " + msg)
-                        addMessage("<span class=\"selfMsg\">Me: </span>" + msg);
+                        if (sendMessageBox.value == "" || sendMessageBox.value == null){
+                            document.getElementById("sendMessageBox").setAttribute("style","border: 3px solid red;");
+                            return;
+                        }
+                        else{
+                            document.getElementById("sendMessageBox").setAttribute("style","border: 3px solid silver;");
+                            sendMessageBox.value = "";
+                            conn.send(msg);
+                            document.getElementById
+                            addMessage("<span class=\"selfMsg\">Me: </span> " + msg);
+                        }
                     };
                     // Clear messages box
                     clearMsgsButton.onclick = function () {
